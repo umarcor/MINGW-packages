@@ -1,0 +1,59 @@
+# https://github.com/alainmarcel/UHDM/pull/363
+
+_realname=UHDM
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=master
+pkgrel=1
+pkgdesc="Universal Hardware Data Model (mingw-w64)"
+arch=('any')
+url="URL"
+license=('license')
+depends=("${MINGW_PACKAGE_PREFIX}-gcc-libs")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+             "${MINGW_PACKAGE_PREFIX}-cmake"
+             "${MINGW_PACKAGE_PREFIX}-ninja"
+             "${MINGW_PACKAGE_PREFIX}-zlib"
+             "${MINGW_PACKAGE_PREFIX}-tcl")
+
+source=("${_realname}::git://github.com/alainmarcel/${_realname}.git#commit=${pkgver}")
+sha256sums=('SKIP')
+
+build() {
+  cd "${srcdir}/${_realname}"
+
+  git submodule update --init --recursive
+
+  mkdir -p build
+
+  export NO_TCMALLOC=On
+
+  MSYS2_ARG_CONV_EXCL='-DCMAKE_INSTALL_PREFIX=' cmake \
+    -G 'MSYS Makefiles' \
+    -DCMAKE_PREFIX_PATH="${MINGW_PREFIX}" \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -S . -B build
+
+  cmake --build build --config Release
+}
+
+check() {
+  cd "${srcdir}/${_realname}"
+  cmake --build build --target UnitTests --config Release
+  cd build && ctest -C Release --output-on-failure
+}
+
+package() {
+  cd "${srcdir}/${_realname}"
+  make DESTDIR="${pkgdir}" install
+  # https://github.com/alainmarcel/UHDM/blob/master/Makefile#L36-L37
+  #cmake --install build --config Release
+  # https://github.com/alainmarcel/UHDM/blob/master/Makefile#L47-L49
+  #cmake --build build --target test_inst --config Release
+  #find build/bin -name test_inst* -exec {} \;
+
+  _licenses="${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}"
+  mkdir -p "${_licenses}"
+  install -m 644 "${srcdir}/${_realname}"/LICENSE "${_licenses}"
+}
