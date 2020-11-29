@@ -1,0 +1,41 @@
+# Maintainer: umarcor <unai.martinezcorral@ehu.eus>
+
+_realname=fujprog
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=4.8
+pkgrel=1
+pkgdesc="fujprog: FPGA ULX2/3 JTAG programmer (mingw-w64)"
+arch=('any')
+url="https://github.com/kost/fujprog"
+license=('GPLv2+')
+depends=("${MINGW_PACKAGE_PREFIX}-libftdi"
+         "${MINGW_PACKAGE_PREFIX}-libusb")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc"
+             "${MINGW_PACKAGE_PREFIX}-make"
+             "${MINGW_PACKAGE_PREFIX}-cmake"
+             "${MINGW_PACKAGE_PREFIX}-pkg-config")
+
+source=("fujprog::https://codeload.github.com/kost/fujprog/tar.gz/v${pkgver}")
+sha256sums=('SKIP')
+
+build() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  mkdir build
+  cd build
+  cmake \
+    -G "MinGW Makefiles" \
+    -DCMAKE_INSTALL_PREFIX="${pkgdir}${MINGW_PREFIX}" \
+    ../
+  mingw32-make
+}
+
+check() {
+  "${srcdir}"/icesugar/tools/src/icesprog.exe -h
+}
+
+package() {
+  cd "${srcdir}/${_realname}"/build
+  mkdir -p "${pkgdir}${MINGW_PREFIX}"
+  make install
+}
