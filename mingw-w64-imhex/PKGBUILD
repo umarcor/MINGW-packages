@@ -1,0 +1,57 @@
+# Maintainer: umarcor <unai.martinezcorral@ehu.eus>
+
+_realname=imhex
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.5.0
+pkgrel=1
+pkgdesc="${_realname}: Hex Editor for Reverse Engineers, Programmers and people that value their eye sight when working at 3 AM (mingw-w64)"
+arch=('any')
+url="https://github.com/WerWolv/ImHex"
+license=('GPLv2')
+depends=("${MINGW_PACKAGE_PREFIX}-python")
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+  "${MINGW_PACKAGE_PREFIX}-capstone"
+  "${MINGW_PACKAGE_PREFIX}-glfw"
+  "${MINGW_PACKAGE_PREFIX}-glm"
+  "${MINGW_PACKAGE_PREFIX}-file"
+  "${MINGW_PACKAGE_PREFIX}-nlohmann-json"
+  "${MINGW_PACKAGE_PREFIX}-openssl"
+  "${MINGW_PACKAGE_PREFIX}-polly"
+  "${MINGW_PACKAGE_PREFIX}-python"
+)
+
+source=(
+  "${_realname}::https://codeload.github.com/WerWolv/imhex/tar.gz/v${pkgver}"
+  '0001-cmake-add-install-target.patch'
+)
+sha256sums=(
+  '211cca3a22d9c0d8a7a3bfa2a3aa7c29cd954c207979632fe9b9a08cf9b8444b'
+  '8f7dddd3aa715c25e085d817ef0555a7d56448a5854298084c1439e74ada5c04'
+)
+
+prepare() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  patch -p1 -i "${srcdir}"/0001-cmake-add-install-target.patch
+}
+
+build() {
+  cd "${srcdir}/${_realname}-${pkgver}"
+  mkdir build
+  cd build
+  export BUILD_TYPE='Release'
+  MSYS2_ARG_CONV_EXCL=- cmake \
+    -G "MSYS Makefiles" \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    ../
+  make
+}
+
+package() {
+  cd "${srcdir}/${_realname}-${pkgver}"/build
+  make DESTDIR="${pkgdir}" install
+
+  install -D -m 644 ../LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}"/LICENSE
+}
