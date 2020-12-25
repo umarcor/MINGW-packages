@@ -20,6 +20,7 @@ makedepends=("${MINGW_PACKAGE_PREFIX}-boost"
              "${MINGW_PACKAGE_PREFIX}-icestorm"
              "${MINGW_PACKAGE_PREFIX}-openmp"
              "${MINGW_PACKAGE_PREFIX}-python"
+             "${MINGW_PACKAGE_PREFIX}-prjtrellis"
              "${MINGW_PACKAGE_PREFIX}-qt5"
              "git")
 
@@ -40,7 +41,7 @@ build() {
     -DICESTORM_INSTALL_PREFIX="${MINGW_PREFIX}" \
     -DCMAKE_PREFIX_PATH=${MINGW_PREFIX} \
     -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
-    -DARCH='generic;ice40' \
+    -DARCH='generic;ice40;ecp5' \
     -DBUILD_HEAP=ON \
     -DUSE_OPENMP=ON \
     -DBUILD_PYTHON=ON \
