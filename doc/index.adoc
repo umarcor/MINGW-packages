@@ -26,4 +26,6 @@ include::tools.adoc[]
 
 include::usage.adoc[]
 
+include::ci.adoc[]
+
 include::contributing.adoc[]

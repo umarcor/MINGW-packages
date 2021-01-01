@@ -39,3 +39,49 @@ All upstreamed EDA packages are available through the default package manager (`
 ==== Package group `eda`
 
 Alternatively, there is a https://wiki.archlinux.org/index.php/Meta_package_and_package_group[package group] named `eda`, which you can install with `pacman -S mingw-w64-x86_64-eda` (64 bits) or `pacman -S mingw-w64-i686-eda` (32 bits). The list of tools will be shown, for you to choose installing all of them or some only. See https://packages.msys2.org/group/mingw-w64-x86_64-eda[mingw-w64-x86_64-eda] and/or https://packages.msys2.org/group/mingw-w64-i686-eda[mingw-w64-i686-eda].
+
+==== Updating
+
+_TBC_
+
+==== Nightly/source builds
+
+_TBC_
+
+=== Simulation
+
+==== Digital
+
+_TBC_
+
+==== Analog
+
+_TBC_
+
+==== Mixed-signal
+
+_TBC_
+
+=== Synthesis
+
+_TBC_
+
+=== Implementation
+
+_TBC_
+
+=== Board programming
+
+_TBC_
+
+=== Language server
+
+_TBC_
+
+=== Formal verification
+
+_TBC_
+
+=== PCB/board design
+
+_TBC_
