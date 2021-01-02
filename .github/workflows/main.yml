@@ -57,3 +57,110 @@ jobs:
         with:
           name: ${{ matrix.msystem }}-packages
           path: C:/_/artifacts/*.pkg.tar.*
+
+
+  UHDM:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: [
+          { msystem: MINGW64, arch: x86_64 },
+          { msystem: MINGW32, arch: i686   }
+        ]
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+
+    - run: git config --global core.autocrlf input
+      shell: bash
+
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{ matrix.msystem }}
+        update: true
+        install: >
+          base-devel
+          git
+          mingw-w64-${{ matrix.arch }}-toolchain
+          tree
+
+    - name: Build and install UHDM
+      run: |
+        cd mingw-w64-UHDM
+        makepkg-mingw --noconfirm --noprogressbar -sCLf
+        pacman --noconfirm -U mingw-w64-*-any.pkg.tar.zst
+        tree pkg
+
+
+  surelog:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include: [
+          { msystem: MINGW64, arch: x86_64 },
+          { msystem: MINGW32, arch: i686   }
+        ]
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+
+    - run: git config --global core.autocrlf input
+      shell: bash
+
+    - uses: actions/checkout@v2
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{ matrix.msystem }}
+        update: true
+        install: >
+          base-devel
+          git
+          mingw-w64-${{ matrix.arch }}-toolchain
+          mingw-w64-${{ matrix.arch }}-gcc
+          mingw-w64-${{ matrix.arch }}-cmake
+          mingw-w64-${{ matrix.arch }}-ninja
+          mingw-w64-${{ matrix.arch }}-openssl
+          mingw-w64-${{ matrix.arch }}-zlib
+          mingw-w64-${{ matrix.arch }}-tcl
+
+    - name: Build and install UHDM
+      run: |
+        cd mingw-w64-UHDM
+        makepkg-mingw --noconfirm --noprogressbar -sCLf
+        pacman --noconfirm -U mingw-w64-*-any.pkg.tar.zst
+        tree pkg
+
+    - name: Build and install Swig
+      run: |
+        cd mingw-w64-surelog/mingw-w64-swig-3.0.12
+        makepkg-mingw --noconfirm --noprogressbar -sCLf
+        pacman --noconfirm -U mingw-w64-*-any.pkg.tar.zst
+        tree pkg
+
+    - run: echo "$(cd "$JAVA_HOME"; pwd)"'/bin' > ~/.JAVA_HOME
+      env:
+        MSYS2_PATH_TYPE: inherit
+
+    - name: Build and install Surelog
+      run: |
+        cd mingw-w64-surelog
+        makepkg-mingw --noconfirm --noprogressbar -sCLf
+        pacman --noconfirm -U mingw-w64-*-any.pkg.tar.zst
+        tree pkg
