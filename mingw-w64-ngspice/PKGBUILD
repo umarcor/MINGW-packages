@@ -43,6 +43,7 @@ build() {
   # FS#45230, create so lib
   # shared lib sets flags and modifies headers, needs dedicated pass
   # adding --with-readline disables libngspice-0.dll
+  ../"${_realname}-${pkgver}"/autogen.sh --adms
   ../${_realname}-${pkgver}/configure \
     --prefix=${MINGW_PREFIX} \
     --build=${MINGW_CHOST} \
@@ -51,21 +52,23 @@ build() {
     --enable-openmp \
     --enable-xspice \
     --enable-cider \
+    --enable-adms \
     --with-ngshared
   make
 
   cd "${srcdir}/${_realname}-${pkgver}"
   [[ -d "${srcdir}/build-static-${CARCH}" ]] && rm -rf "${srcdir}/build-static-${CARCH}"
   mkdir -p "${srcdir}/build-static-${CARCH}" && cd "${srcdir}/build-static-${CARCH}"
-
+  ../"${_realname}-${pkgver}"/autogen.sh --adms
   ../${_realname}-${pkgver}/configure \
     --prefix=${MINGW_PREFIX} \
     --build=${MINGW_CHOST} \
     --host=${MINGW_CHOST} \
     --disable-debug \
+    --enable-openmp \
     --enable-xspice \
     --enable-cider \
-    --enable-openmp \
+    --enable-adms \
     --with-wingui
   make
 }
