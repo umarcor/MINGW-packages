@@ -1,0 +1,37 @@
+# Maintainer: umarcor <unai.martinezcorral@ehu.eus>
+
+_realname=xauth
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=1.1
+pkgrel=1
+pkgdesc="X authority file utility (mingw-w64)"
+arch=('any')
+url="https://gitlab.freedesktop.org/xorg/app/xauth"
+license=("custom")
+makedepends=("${MINGW_PACKAGE_PREFIX}-gcc")
+
+source=("${_realname}.tar.gz"::"https://gitlab.freedesktop.org/xorg/app/xauth/-/archive/xauth-${pkgver}/.tar.gz")
+sha256sums=('b0b630996eb16c870a825aaf1d10b9387f7ee6d161ec31faece51fa7677d8f81')
+
+_dir="xauth-xauth-1.1-e97992671b3870878709a1c01991488965b61b94"
+
+prepare() {
+  cd "${srcdir}"/"${_dir}"
+  ./autogen.sh
+}
+
+build() {
+  cd "${srcdir}"/"${_dir}"
+  make
+}
+
+check() {
+  cd "${srcdir}"/"${_dir}"
+  make check
+}
+
+package() {
+  cd "${srcdir}"/"${_dir}"
+  make DESTDIR="${pkgdir}" install
+}
