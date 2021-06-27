@@ -27,6 +27,7 @@ prepare() {
 build() {
     cd ${srcdir}/${_realname}-${pkgver}
     ./configure --prefix=${MINGW_PREFIX}
+    make
 }
 
 package() {
