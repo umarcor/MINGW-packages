@@ -30,6 +30,10 @@ build() {
     make
 }
 
+check() {
+    ls -la ${srcdir}/${_realname}-${pkgver}/src/dfu-util --help
+}
+
 package() {
     cd ${srcdir}/${_realname}-${pkgver}
     make DESTDIR="$pkgdir" install
