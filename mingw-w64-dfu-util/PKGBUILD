@@ -11,8 +11,7 @@ mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
 license=('GPL2')
 groups=("${MINGW_PACKAGE_PREFIX}-eda")
 url='https://dfu-util.sourceforge.io/'
-depends=("${MINGW_PACKAGE_PREFIX}-libusb"
-         "${MINGW_PACKAGE_PREFIX}-libwinpthread-git")
+depends=("${MINGW_PACKAGE_PREFIX}-libusb")
 source=(
     "https://downloads.sourceforge.net/project/dfu-util/dfu-util-${pkgver}.tar.gz"
 )
