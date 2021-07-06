@@ -1,0 +1,81 @@
+# Maintainer: umarcor <unai.martinezcorral@ehu.eus>
+
+_realname=silice
+pkgbase=mingw-w64-${_realname}
+pkgname="${MINGW_PACKAGE_PREFIX}-${_realname}"
+pkgver=0.0.r1469.420e559
+pkgrel=1
+pkgdesc="Silice: open source language for hardcoding Algorithms into FPGA hardware (mingw-w64)"
+arch=('any')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32')
+url="https://github.com/sylefeb/Silice"
+license=('AGPLv3.0')
+groups=("${MINGW_PACKAGE_PREFIX}-eda")
+depends=()
+makedepends=(
+  "unzip"
+  "wget"
+  "perl"
+  "${MINGW_PACKAGE_PREFIX}-gcc"
+  "${MINGW_PACKAGE_PREFIX}-cmake"
+)
+
+_commit="420e5598"
+source=("${_realname}::git://github.com/sylefeb/${_realname}.git#commit=${_commit}")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "${_realname}"
+  printf "0.0.r%s.%s" "$(git rev-list --count "${_commit}")" "$(git rev-parse --short "${_commit}")"
+}
+
+prepare() {
+  cd "${srcdir}/${_realname}"
+  git submodule update --init --recursive
+
+  wget -c https://download.java.net/java/GA/jdk14.0.1/664493ef4a6946b186ff29eb326336a2/7/GPL/openjdk-14.0.1_windows-x64_bin.zip
+  unzip -o openjdk-14.0.1_windows-x64_bin.zip
+  rm openjdk-14.0.1_windows-x64_bin.zip
+  mv jdk-14.0.1 openjdk
+}
+
+build() {
+  cd "${srcdir}/${_realname}"
+
+  export PATH=$PATH:$PWD/openjdk/bin
+
+  mkdir build-silice
+  cd build-silice
+  MSYS2_ARG_CONV_EXCL=- cmake \
+    -G "MSYS Makefiles" \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    ../
+  make
+  cd ..
+
+  mkdir build-silicehe
+  cd build-silicehe
+  MSYS2_ARG_CONV_EXCL=- cmake \
+    -G "MSYS Makefiles" \
+    -DCMAKE_INSTALL_PREFIX="${MINGW_PREFIX}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    ../tools/silice_hardware_emulator
+  make
+  cd ..
+}
+
+check() {
+  "${srcdir}/${_realname}"/build/openFPGALoader.exe --help
+}
+
+package() {
+  cd "${srcdir}/${_realname}"/build-silice
+  make DESTDIR="${pkgdir}" install
+  cd ../build-silicehe
+  make DESTDIR="${pkgdir}" install
+
+  #_licenses="${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}"
+  #mkdir -p "${_licenses}"
+  #install -m 644 "${srcdir}/${_realname}"/LICENSE "${_licenses}"
+}
