@@ -45,6 +45,7 @@ build() {
         --enable-libghdl \
         --enable-synth \
         --with-llvm-config="llvm-config --link-static" \
+        --with-backtrace-lib=${MINGW_PREFIX}/lib/libbacktrace.a \
         LDFLAGS="-static"
   fi
 
@@ -75,7 +76,10 @@ _package() {
 
 if [ "${CARCH}" = "x86_64" ]; then
   pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}-llvm")
-  makedepends=("${MINGW_PACKAGE_PREFIX}-clang")
+  makedepends=(
+    "${MINGW_PACKAGE_PREFIX}-clang"
+    "${MINGW_PACKAGE_PREFIX}-libbacktrace"
+  )
   package() {
     pkgdesc="$pkgdesc (LLVM backend) (mingw-w64)"
     depends=(
