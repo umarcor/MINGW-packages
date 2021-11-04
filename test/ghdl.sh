@@ -40,6 +40,8 @@ pip3 install git+https://github.com/ghdl/ghdl.git@$(ghdl version hash)
 echo '::endgroup::'
 
 printf '\nAre Python entrypoints installed?\n'
+ls -la $MINGW_PREFIX/lib/ghdl
+
 ghdl-ls
 ghdl-dom
 
