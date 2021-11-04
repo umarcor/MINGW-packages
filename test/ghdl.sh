@@ -48,4 +48,4 @@ mkdir ghdl
 cd ghdl
 curl -fsSL https://codeload.github.com/ghdl/ghdl/tar.gz/master | tar xzf - --strip-components=1
 pip3 install -r testsuite/requirements.txt
-GHDL=ghdl ./testsuite/testsuite.sh
+GHDL=ghdl GHDL_PREFIX="$MINGW_PREFIX/lib/ghdl" ./testsuite/testsuite.sh
