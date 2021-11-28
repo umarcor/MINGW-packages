@@ -10,7 +10,7 @@ pkgname=(
   "${MINGW_PACKAGE_PREFIX}-${_realname}-templates"
   "${MINGW_PACKAGE_PREFIX}-${_realname}-packages3D"
 )
-pkgver=5.1.10
+pkgver=5.1.12
 pkgrel=4
 pkgdesc="Software for the creation of electronic schematic diagrams and printed circuit board artwork (mingw-w64)"
 arch=(any)
@@ -52,12 +52,12 @@ source=(
   '0001-fix-FindwxWidgets.cmake.patch'
 )
 sha256sums=(
-  '296341f30ada2c7f4a1c54720eab425835a93349527d4bf08f73f280d19695ed'
-  'f07e029717bfbf0b54c59cbf191e1b2b35cccd276c9fac454239b249e0924fdc'
-  '65de50a9669e5eb0f2e4eed433802432eee2bd98df1e898905a7dc117cdb3050'
-  '5e80c8420a563c76c884b2771792ce7ee69efbe67d11d9b025eeb16b75aee45e'
-  'f2c44d6dc69fc3c7db05f57c5caf290721e0bba3fe686e4e3bc2765e3f314668'
-  'b79f8de319a463d12972253a125ece118a8000533061d443d5730e1498822bff'
+  '101cc025e55cb3cc047debe5e4b1ac1fa116ceed147fef1bc275d8e21f76aa3f'
+  'bdaad9a89f2f0454f48a6e183cd2cce953b7f519ce79324858b25c74ce8789c5'
+  'd16742054ee5eacb7db916280960be7a5218d11b0b2201fa6cb6d61ee34652ec'
+  'f641e121a53cc2b7d2fe25fea88a4b1f14701a068c7243fdc0efa129497b332f'
+  '7b07b82b424875bfde34c6529b8524446bc8c4d608f48739380179520496596f'
+  '2752bb2cced9686e6edf043c6829db53ff4ae4c0e52d8318602da9cde82d0652'
   '3fe6d1126dc3a4e3d720714fc08ca8d10771f3d38f2a2118b95f9ca41ace0c2d'
 )
 
