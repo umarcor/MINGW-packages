@@ -1,0 +1,31 @@
+_realname=cocotb
+pkgbase=mingw-w64-${_realname}
+pkgname=("${MINGW_PACKAGE_PREFIX}-${_realname}")
+pkgver=1.6.2
+pkgrel=1
+pkgdesc='Coroutine based cosimulation library for writing VHDL and Verilog testbenches in Python '
+arch=('any')
+mingw_arch=('mingw32' 'mingw64' 'ucrt64' 'clang64' 'clang32' 'clangarm64')
+url="https://github.com/cocotb/cocotb"
+license=('BSD')
+makedepends=(
+  "${MINGW_PACKAGE_PREFIX}-python-setuptools"
+)
+source=("${_realname}::https://github.com/${_realname}/${_realname}/archive/refs/tags/v${pkgver}.tar.gz")
+sha256sums=('071280013e43b9044a098709ea9d7933abd56c63c38395236e6c192ada011312')
+
+build() {
+  cd "${_realname}-$pkgver"
+  ${MINGW_PREFIX}/bin/python setup.py build
+}
+
+package() {
+  echo "HI"
+  cd "${_realname}-$pkgver"
+
+  MSYS2_ARG_CONV_EXCL="--prefix=;--install-scripts=;--install-platlib=" \
+  ${MINGW_PREFIX}/bin/python setup.py install --prefix=${MINGW_PREFIX} \
+  --root="${pkgdir}" --skip-build
+
+  install -Dm644 LICENSE "${pkgdir}${MINGW_PREFIX}/share/licenses/${_realname}/LICENSE"
+}
